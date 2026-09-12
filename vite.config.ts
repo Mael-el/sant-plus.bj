@@ -22,24 +22,10 @@ export default defineConfig(() => {
     },
     build: {
       chunkSizeWarningLimit: 600,
+      modulePreload: false,
       rollupOptions: {
         output: {
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom') || id.includes('motion')) {
-                return 'vendor-core';
-              }
-              if (id.includes('leaflet') || id.includes('@vis.gl/react-google-maps')) {
-                return 'vendor-maps';
-              }
-              if (id.includes('jspdf') || id.includes('qrcode.react') || id.includes('jsqr')) {
-                return 'vendor-docs';
-              }
-              if (id.includes('lucide-react')) {
-                return 'vendor-icons';
-              }
-            }
-          },
+          manualChunks: undefined,
         },
       },
     },
