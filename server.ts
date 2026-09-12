@@ -407,8 +407,11 @@ export async function resolvePort(requestedPort: number): Promise<number> {
 
 async function startServer() {
   if (process.env.NODE_ENV === 'production') {
-    const required = ['JWT_SECRET', 'JWT_REFRESH_SECRET', 'ENCRYPTION_KEY', 'POSTGRES_PASSWORD', 'MONGODB_URI', 'PINATA_API_KEY', 'PINATA_SECRET_API_KEY'];
+    const required = ['JWT_SECRET', 'JWT_REFRESH_SECRET', 'ENCRYPTION_KEY'];
     const missing = required.filter(name => !process.env[name]?.trim());
+    if (!process.env.DATABASE_URL?.trim() && !process.env.POSTGRES_PASSWORD?.trim()) {
+      missing.push('DATABASE_URL or POSTGRES_PASSWORD');
+    }
     const lightningProvider = (process.env.LIGHTNING_PROVIDER || 'lnbits').toLowerCase();
     const lightningKey = lightningProvider === 'lnbits' ? process.env.LNBITS_API_KEY : process.env.LIGHTNING_API_KEY;
     const fiatProvider = (process.env.FIAT_PROVIDER || 'fedapay').toLowerCase();
@@ -419,10 +422,12 @@ async function startServer() {
         : process.env.IZICHANGE_API_KEY;
     if (!['lnbits', 'breez', 'izichange'].includes(lightningProvider)) missing.push('LIGHTNING_PROVIDER');
     if (!['fedapay', 'kkiapay', 'izichange'].includes(fiatProvider)) missing.push('FIAT_PROVIDER');
-    if (!lightningKey?.trim()) missing.push(lightningProvider === 'lnbits' ? 'LNBITS_API_KEY' : 'LIGHTNING_API_KEY');
-    if (!fiatKey?.trim()) missing.push(fiatProvider === 'fedapay' ? 'FEDAPAY_SECRET_KEY' : fiatProvider === 'kkiapay' ? 'KKIAPAY_PRIVATE_KEY' : 'IZICHANGE_API_KEY');
-    if (lightningProvider !== 'lnbits' && !process.env.LIGHTNING_API_URL?.trim()) missing.push('LIGHTNING_API_URL');
-    if (fiatProvider !== 'fedapay' && !process.env.FIAT_API_URL?.trim()) missing.push('FIAT_API_URL');
+    if (lightningKey?.trim() && lightningProvider !== 'lnbits' && !process.env.LIGHTNING_API_URL?.trim()) {
+      missing.push('LIGHTNING_API_URL');
+    }
+    if (fiatKey?.trim() && fiatProvider !== 'fedapay' && !process.env.FIAT_API_URL?.trim()) {
+      missing.push('FIAT_API_URL');
+    }
     if (missing.length > 0) {
       throw new Error(`Missing production configuration: ${missing.join(', ')}`);
     }
