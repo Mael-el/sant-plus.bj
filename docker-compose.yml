@@ -58,7 +58,7 @@ services:
     container_name: santeplus-api-gateway
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "${API_PORT:-3000}:3000"
     environment:
       NODE_ENV: ${DOCKER_NODE_ENV:-production}
       PORT: 3000
@@ -118,7 +118,7 @@ services:
     networks:
       - santeplus-network
     healthcheck:
-      test: ["CMD-SHELL", "nginx -t >/dev/null 2>&1 && test -f /usr/share/nginx/html/index.html"]
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ && test -f /usr/share/nginx/html/index.html"]
       interval: 10s
       timeout: 5s
       retries: 5

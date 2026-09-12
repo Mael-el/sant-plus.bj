@@ -462,7 +462,11 @@ async function startServer() {
       : false,
   }));
   const PORT = Number(process.env.PORT) || 3000;
-  const resolvedPort = await resolvePort(PORT);
+  // Cloud platforms assign PORT and route traffic to that exact port.
+  // Falling back to another port makes the service appear blank or unhealthy.
+  const resolvedPort = process.env.NODE_ENV === 'production'
+    ? PORT
+    : await resolvePort(PORT);
 
   if (resolvedPort !== PORT) {
     console.warn(`[Santé+ Benin Server] Port ${PORT} occupé, basculement sur ${resolvedPort}.`);

@@ -2,13 +2,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #059669;   /* Vert Émeraude Santé+ */
-  --color-primary-light: #E6F7F0;
-  --color-success: #00D26A;   /* Vert Lightning */
-  --color-accent:  #F59E0B;   /* Ambre de Validation */
-  --color-bg:      #F8FAFC;   /* Gris Clair Ardoise ultra-propre */
-  --color-text:    #0F172A;   /* Ardoise Foncée haute lisibilité */
-  --color-danger:  #EF4444;   /* Rouge Alerte */
+  --color-primary: #008000;
+  --color-primary-light: #FFFFFF;
+  --color-success: #008000;
+  --color-accent:  #008000;
+  --color-bg:      #FFFFFF;
+  --color-text:    #008000;
+  --color-danger:  #008000;
   
   /* Police Lexend originale : spécialement conçue pour maximiser la lisibilité médicale et le confort de lecture */
   --font-sans: "Lexend", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -30,8 +30,8 @@ html {
 }
 
 body {
-  background-color: #F8FAFC;
-  color: #0F172A;
+  background-color: #FFFFFF;
+  color: #008000;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -57,14 +57,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 /* Cartes interactives Santé+ */
 .sante-card {
   background-color: #ffffff;
-  border: 1.5px solid #E2E8F0;
+  border: 1.5px solid #008000;
   border-radius: 1.5rem;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sante-card:hover {
-  border-color: #059669;
-  box-shadow: 0 12px 28px -5px rgba(0, 0, 0, 0.08), 0 8px 12px -6px rgba(0, 0, 0, 0.02);
+  border-color: #008000;
+  box-shadow: none;
   transform: translateY(-2px);
 }
 
@@ -115,11 +115,143 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   animation: pulseGlow 3s infinite;
 }
 
+/* Accueil : profondeur visuelle et mouvement doux, sans alourdir le chargement */
+.landing-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.landing-page::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 44rem;
+  z-index: -3;
+  pointer-events: none;
+  background: #FFFFFF;
+}
+
+.landing-grid {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 38rem;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0;
+  background-image: none;
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to bottom, black, transparent 86%);
+}
+
+.landing-orb {
+  position: absolute;
+  z-index: -1;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 999px;
+  filter: blur(1px);
+  opacity: 0.6;
+  pointer-events: none;
+  animation: landingFloat 7s ease-in-out infinite;
+}
+
+.landing-orb-one {
+  top: 11rem;
+  left: 3%;
+  background: #FFFFFF;
+}
+
+.landing-orb-two {
+  top: 20rem;
+  right: 4%;
+  width: 5rem;
+  height: 5rem;
+  background: #FFFFFF;
+}
+
+.landing-logo-badge {
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-logo-badge::after {
+  content: "";
+  position: absolute;
+  inset: -40% 45% -40% -35%;
+  transform: rotate(25deg);
+  background: #FFFFFF;
+  animation: none;
+}
+
+.landing-highlight {
+  position: relative;
+  white-space: nowrap;
+}
+
+.landing-highlight::after {
+  content: "";
+  position: absolute;
+  left: 0.04em;
+  right: 0.04em;
+  bottom: -0.05em;
+  height: 0.22em;
+  z-index: -1;
+  border-radius: 999px;
+  background: #008000;
+  transform: none;
+}
+
+.landing-role-card {
+  min-height: 14.5rem;
+  transition: none;
+}
+
+.landing-role-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.landing-faq {
+  box-shadow: none;
+
+.landing-page *,
+.landing-page *::before,
+.landing-page *::after {
+  animation: none !important;
+  transition: none !important;
+}
+}
+
+@keyframes landingFloat {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -14px, 0); }
+}
+
+@keyframes landingShine {
+  0%, 42% { transform: translateX(-180%) rotate(25deg); }
+  65%, 100% { transform: translateX(360%) rotate(25deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 1ms !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-page::before {
+    height: 53rem;
+  }
+
+  .landing-grid {
+    height: 48rem;
+    background-size: 26px 26px;
+  }
+
+  .landing-role-card {
+    min-height: 0;
   }
 }
